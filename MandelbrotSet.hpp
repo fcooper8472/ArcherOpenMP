@@ -31,7 +31,7 @@ public:
         std::complex<double> c;
         std::complex<double> z;
 
-        #pragma omp accumulate(+:num_outside) for schedule(static, block_size)
+        #pragma omp parallel for schedule(static, block_size) reduction(+:num_outside)
         for (auto i = 0 ; i < npoints ; ++i)
         {
             for (auto j = 0; j < npoints; ++j)

@@ -25,7 +25,7 @@ int main()
     for(auto&& block_size : block_sizes)
     {
         timer.PollTime();
-        m.CalculateArea(4000u, 2000u, block_size);
+        m.CalculateArea(4000u, 1000u, block_size);
         std::cout << "Time elapsed: " << timer.GetElapsedTime() << " seconds" << std::endl;
     }
 }
