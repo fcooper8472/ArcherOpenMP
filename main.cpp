@@ -4,9 +4,13 @@
 int main()
 {
 
-#pragma omp parallel default(none)
+    int sum = 0;
+
+#pragma omp parallel default(none) reduction(+:sum)
 {
-    std::cout << omp_get_thread_num() << std::endl;
+    sum = omp_get_thread_num();
 }
+
+    std::cout << sum << std::endl;
 
 }
