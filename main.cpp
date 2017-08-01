@@ -1,4 +1,5 @@
 
+#include <chrono>
 #include <iostream>
 #include <omp.h>
 #include <sstream>
@@ -17,6 +18,11 @@ int main()
         }
     }
 
+    auto t_start = std::chrono::high_resolution_clock::now();
     MandelbrotSet m;
     m.CalculateArea(2000u, 200u);
+    auto t_end = std::chrono::high_resolution_clock::now();
+    auto time_spent = std::chrono::duration_cast<std::chrono::duration<double>>(t_end - t_start);
+
+    std::cout << "Time elapsed: " << time_spent.count() << " seconds" << std::endl;
 }
