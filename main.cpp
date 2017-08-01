@@ -5,26 +5,23 @@
 #include <sstream>
 
 #include "MandelbrotSet.hpp"
+#include "Timer.hpp"
+
 
 int main()
 {
-    using clock = std::chrono::high_resolution_clock;
-
-#pragma omp parallel default(none) shared(std::cout)
+    #pragma omp parallel default(none) shared(std::cout)
     {
-        if(omp_get_thread_num() == 0)
-        {
-            std::stringstream num_threads;
-            num_threads << "Using " << omp_get_num_threads() << " OpenMP threads" << std::endl;
-            std::cout << num_threads.str();
-        }
+        #pragma omp single
+        std::cout << "Using " << omp_get_num_threads() << " OpenMP threads" << std::endl;
     }
 
-    auto t_start = clock::now();
-    MandelbrotSet m;
-    m.CalculateArea(4000u, 1000u);
-    auto t_end = clock::now();
-    auto time_spent = std::chrono::duration_cast<std::chrono::duration<double>>(t_end - t_start);
+    Timer timer;
 
-    std::cout << "Time elapsed: " << time_spent.count() << " seconds" << std::endl;
+    MandelbrotSet m;
+
+    timer.PollTime();
+    m.CalculateArea(4000u, 10u);
+    std::cout << "Time elapsed: " << timer.GetElapsedTime() << " seconds" << std::endl;
+
 }
