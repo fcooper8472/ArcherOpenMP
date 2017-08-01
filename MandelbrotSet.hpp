@@ -27,11 +27,10 @@ public:
         std::size_t num_outside = 0;
 
         auto npoints_f = static_cast<double>(npoints);
-
         std::complex<double> c;
         std::complex<double> z;
 
-        #pragma omp parallel for schedule(static, block_size) reduction(+:num_outside)
+#pragma omp parallel for shared(npoints, npoints_f, max_iter) reduction(+:num_outside) private(c, z) schedule(static, block_size)
         for (auto i = 0 ; i < npoints ; ++i)
         {
             for (auto j = 0; j < npoints; ++j)
