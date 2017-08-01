@@ -5,52 +5,54 @@
 
 #define mm 15
 #define npart 4*mm*mm*mm
+
 /*
  *  Function declarations
  */
 
-  void
-  dfill(int,double,double[],int);
+void
+dfill(int,double,double[],int);
 
-  void
-  domove(int,double[],double[],double[],double);
+void
+domove(int,double[],double[],double[],double);
 
-  void
-  dscal(int,double,double[],int);
+void
+dscal(int,double,double[],int);
 
-  void
-  fcc(double[],int,int,double);
+void
+fcc(double[],int,int,double);
 
-  void
-  forces(int,double[],double[],double,double);
+void
+forces(int,double[],double[],double,double);
 
-  double
-  mkekin(int,double[],double[],double,double);
+double
+mkekin(int,double[],double[],double,double);
 
-  void
-  mxwell(double[],int,double,double);
+void
+mxwell(double[],int,double,double);
 
-  void
-  prnout(int,double,double,double,double,double,double,int,double);
+void
+prnout(int,double,double,double,double,double,double,int,double);
 
-  double
-  velavg(int,double[],double,double);
+double
+velavg(int,double[],double,double);
 
-  double 
-  secnds(void);
+double
+secnds(void);
 
 /*
  *  Variable declarations
  */
 
-  double epot;
-  double vir;
-  double count;
+double epot;
+double vir;
+double count;
 
 /*
  *  Main program : Molecular Dynamics simulation.
  */
-int main(){
+int main()
+{
     int move;
     double x[npart*3], vh[npart*3], f[npart*3];
     double ekin;
@@ -111,42 +113,46 @@ int main(){
            "   pres      vel      rp\n  -----  ----------  ----------"
            "  ----------  --------  --------  --------  ----\n");
 
-     start = secnds(); 
+    start = secnds();
 
 
-    for (move=1; move<=movemx; move++) {
+    for (move=1; move<=movemx; move++)
+    {
 
-    /*
-     *  Move the particles and partially update velocities
-     */
-      domove(3*npart, x, vh, f, side);
+        /*
+         *  Move the particles and partially update velocities
+         */
+        domove(3*npart, x, vh, f, side);
 
-    /*
-     *  Compute forces in the new positions and accumulate the virial
-     *  and potential energy.
-     */
-      forces(npart, x, f, side, rcoff);
+        /*
+         *  Compute forces in the new positions and accumulate the virial
+         *  and potential energy.
+         */
+        forces(npart, x, f, side, rcoff);
 
-    /*
-     *  Scale forces, complete update of velocities and compute k.e.
-     */
-      ekin=mkekin(npart, f, vh, hsq2, hsq);
+        /*
+         *  Scale forces, complete update of velocities and compute k.e.
+         */
+        ekin=mkekin(npart, f, vh, hsq2, hsq);
 
-    /*
-     *  Average the velocity and temperature scale if desired
-     */
-      vel=velavg(npart, vh, vaver, h);
-      if (move<istop && fmod(move, irep)==0) {
-        sc=sqrt(tref/(tscale*ekin));
-        dscal(3*npart, sc, vh, 1);
-        ekin=tref/tscale;
-      }
+        /*
+         *  Average the velocity and temperature scale if desired
+         */
+        vel=velavg(npart, vh, vaver, h);
+        if (move<istop && fmod(move, irep)==0)
+        {
+            sc=sqrt(tref/(tscale*ekin));
+            dscal(3*npart, sc, vh, 1);
+            ekin=tref/tscale;
+        }
 
-    /*
-     *  Sum to get full potential energy and virial
-     */
-      if (fmod(move, iprint)==0)
-        prnout(move, ekin, epot, tscale, vir, vel, count, npart, den);
+        /*
+         *  Sum to get full potential energy and virial
+         */
+        if (fmod(move, iprint)==0)
+        {
+            prnout(move, ekin, epot, tscale, vir, vel, count, npart, den);
+        }
       
     }
 
