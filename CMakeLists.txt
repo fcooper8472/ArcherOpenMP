@@ -3,7 +3,7 @@ project(ArcherOpenMP)
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(SOURCE_FILES main.cpp)
+set(SOURCE_FILES main.cpp MandelbrotSet.hpp)
 
 FIND_PACKAGE(OpenMP REQUIRED)
 if(OPENMP_FOUND)
