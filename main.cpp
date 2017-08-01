@@ -18,10 +18,14 @@ int main()
 
     Timer timer;
 
-    MandelbrotSet m;
+    MandelbrotSet m{};
 
-    timer.PollTime();
-    m.CalculateArea(4000u, 10u);
-    std::cout << "Time elapsed: " << timer.GetElapsedTime() << " seconds" << std::endl;
+    std::initializer_list<unsigned> block_sizes = {1, 2, 4, 8, 16};
 
+    for(auto&& block_size : block_sizes)
+    {
+        timer.PollTime();
+        m.CalculateArea(4000u, 2000u, block_size);
+        std::cout << "Time elapsed: " << timer.GetElapsedTime() << " seconds" << std::endl;
+    }
 }
