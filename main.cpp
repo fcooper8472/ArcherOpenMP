@@ -22,7 +22,7 @@ int main()
 
     auto t_start = clock::now();
     MandelbrotSet m;
-    m.CalculateArea(2000u, 200u);
+    m.CalculateArea(4000u, 1000u);
     auto t_end = clock::now();
     auto time_spent = std::chrono::duration_cast<std::chrono::duration<double>>(t_end - t_start);
 
