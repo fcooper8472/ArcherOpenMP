@@ -28,13 +28,7 @@ public:
 
 #pragma omp parallel default(none) shared(npoints, npoints_f, max_iter) reduction(+:num_outside) private(c, z)
         {
-            auto its_per_thread = std::lround(std::ceil(npoints_f / omp_get_num_threads()));
-            auto thread_num = omp_get_thread_num();
-
-            auto lower = thread_num * its_per_thread;
-            auto upper = (thread_num + 1) * its_per_thread;
-
-            for (auto i = lower ; i < std::min<long>(upper, npoints) ; ++i)
+            for (auto i = omp_get_thread_num() ; i < npoints ; i += omp_get_num_threads())
             {
                 for (auto j = 0; j < npoints; ++j)
                 {

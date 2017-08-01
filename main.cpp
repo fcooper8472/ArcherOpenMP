@@ -8,6 +8,8 @@
 
 int main()
 {
+    using clock = std::chrono::high_resolution_clock;
+
 #pragma omp parallel default(none) shared(std::cout)
     {
         if(omp_get_thread_num() == 0)
@@ -18,10 +20,10 @@ int main()
         }
     }
 
-    auto t_start = std::chrono::high_resolution_clock::now();
+    auto t_start = clock::now();
     MandelbrotSet m;
     m.CalculateArea(2000u, 200u);
-    auto t_end = std::chrono::high_resolution_clock::now();
+    auto t_end = clock::now();
     auto time_spent = std::chrono::duration_cast<std::chrono::duration<double>>(t_end - t_start);
 
     std::cout << "Time elapsed: " << time_spent.count() << " seconds" << std::endl;
