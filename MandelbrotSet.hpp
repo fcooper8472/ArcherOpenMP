@@ -2,6 +2,8 @@
 // Created by fergus on 01/08/17.
 //
 
+#pragma once
+
 #include <complex>
 #include <iostream>
 #include <omp.h>
