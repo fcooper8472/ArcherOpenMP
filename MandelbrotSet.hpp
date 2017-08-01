@@ -3,6 +3,9 @@
 //
 
 #include <complex>
+#include <iostream>
+#include <omp.h>
+#include <sstream>
 
 class MandelbrotSet
 {
@@ -14,28 +17,38 @@ public:
 
     void CalculateArea(unsigned npoints, unsigned max_iter)
     {
-        auto npoints_f = static_cast<double>(npoints);
         std::size_t num_outside = 0;
+
+        auto npoints_f = static_cast<double>(npoints);
 
         std::complex<double> c;
         std::complex<double> z;
 
-        for (auto i = 0; i < npoints; ++i)
+#pragma omp parallel default(none) shared(npoints, npoints_f, max_iter) reduction(+:num_outside) private(c, z)
         {
-            for (auto j = 0; j < npoints; ++j)
+            auto its_per_thread = std::lround(std::ceil(npoints_f / omp_get_num_threads()));
+            auto thread_num = omp_get_thread_num();
+
+            auto lower = thread_num * its_per_thread;
+            auto upper = (thread_num + 1) * its_per_thread;
+
+            for (auto i = lower ; i < std::min<long>(upper, npoints) ; ++i)
             {
-                c.real(-2.0 + 2.5 * i / npoints_f + 1.0e-7);
-                c.imag(1.125 * j / npoints_f + 1.0e-7);
-                z = c;
-
-                for (auto it = 0; it < max_iter; ++it)
+                for (auto j = 0; j < npoints; ++j)
                 {
-                    z = z * z + c;
+                    c.real(-2.0 + 2.5 * i / npoints_f + 1.0e-7);
+                    c.imag(1.125 * j / npoints_f + 1.0e-7);
+                    z = c;
 
-                    if (std::norm(z) > 4.0e0)
+                    for (auto it = 0; it < max_iter; ++it)
                     {
-                        num_outside++;
-                        break;
+                        z = z * z + c;
+
+                        if (std::norm(z) > 4.0e0)
+                        {
+                            num_outside++;
+                            break;
+                        }
                     }
                 }
             }
