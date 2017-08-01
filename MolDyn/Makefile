@@ -3,8 +3,8 @@
 #
 # C compiler and options for Cray
 #
-CC=	cc
-LIB=
+#CC=	cc
+#LIB=
 
 #
 # C compiler and options for Intel
@@ -21,8 +21,8 @@ LIB=
 #
 # C compiler and options for GNU 
 #
-#CC=     gcc -O3 -fopenmp 
-#LIB=	-lm
+CC=     gcc -O3 -fopenmp
+LIB=	-lm
 
 #
 # Object files
