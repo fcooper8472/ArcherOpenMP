@@ -15,17 +15,17 @@
     double rd, rrd, rrd2, rrd3, rrd4, rrd6, rrd7, r148;
     double forcex, forcey, forcez;
 
-    vir    = 0.0;
-    epot   = 0.0;
+    #pragma omp master
+    {
+          vir = 0.0;
+          epot = 0.0;
+    }
+    #pragma omp barrier
+
     sideh  = 0.5*side;
     rcoffs = rcoff*rcoff;
 
-#pragma omp parallel for \
-default(none) \
-shared(npart, x, f, side, rcoff, sideh, rcoffs) \
-private(i,j,xi,yi,zi,fxi,fyi,fzi,xx,yy,zz,rd, rrd, rrd2, rrd3, rrd4, rrd6, rrd7, r148,forcex, forcey, forcez) \
-reduction(+:epot,vir) \
-schedule(dynamic)
+    #pragma omp for reduction(+:epot,vir) schedule(dynamic)
     for (i=0; i<npart*3; i+=3)
     {
         xi  = x[i];

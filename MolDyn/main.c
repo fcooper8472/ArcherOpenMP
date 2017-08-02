@@ -128,8 +128,10 @@ int main()
          *  Compute forces in the new positions and accumulate the virial
          *  and potential energy.
          */
-        forces(npart, x, f, side, rcoff);
-
+        #pragma omp parallel default(none) shared(x, f, side, rcoff) num_threads(4)
+        {
+            forces(npart, x, f, side, rcoff);
+        }
         /*
          *  Scale forces, complete update of velocities and compute k.e.
          */
