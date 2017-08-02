@@ -13,19 +13,26 @@ int main()
     #pragma omp parallel default(none) shared(std::cout)
     {
         #pragma omp single
-        std::cout << "Using " << omp_get_num_threads() << " OpenMP threads" << std::endl;
+        std::cout << "Using max " << omp_get_num_threads() << " OpenMP threads" << std::endl;
     }
 
     Timer timer;
 
     MandelbrotSet m{};
 
-    std::initializer_list<unsigned> block_sizes = {1, 2, 4, 8, 16};
+    std::initializer_list<unsigned> threads = {1, 2, 4, 8};
 
-    for(auto&& block_size : block_sizes)
+    for(auto&& thread : threads)
     {
+        unsigned npoints = 4000;
+        unsigned max_iter = 1000;
+
+        std::cout << "--------------------------------\n";
+        std::cout << "Mandlebrot: (" << npoints << "," << max_iter << ") with " << thread << " threads\n";
+
         timer.PollTime();
-        m.CalculateArea(4000u, 1000u, block_size);
+        m.CalculateArea(npoints, max_iter, thread);
         std::cout << "Time elapsed: " << timer.GetElapsedTime() << " seconds" << std::endl;
+        std::cout << "--------------------------------\n";
     }
 }
